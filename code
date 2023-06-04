@@ -1,0 +1,166 @@
+import java.util.Scanner; 
+class TicTacToe
+{  
+    void display(char arr[])
+    {
+        for (int i=0; i<arr.length; i++)
+            System.out.print(arr[i]+"\t");
+    }
+
+    char[] copy(char arr[][])
+    {
+        char convert[]= new char [33];
+        int k=0;
+        for (int i=0; i<3; i++) //ROW WISE
+        {    for (int j=0; j<3; j++)
+                convert[k++]= arr[i][j]; 
+                convert[k++]=' ';
+        }
+        convert[k++]= ' ';
+        for (int i=0; i<3; i++) //COLUMN WISE
+         {   for (int j=0; j<3; j++)
+                convert[k++]= arr[j][i];
+                convert[k++]=' ';
+            }
+        convert[k++]= ' ';
+        for (int i=0; i<3; i++) //LEFT DIAGONAL WISE
+            convert[k++]= arr[i][i]; 
+        convert[k++]= ' ';
+        for (int i=0; i<3; i++) //RIGHT DIAGONAL WISE
+            convert[k++]= arr[i][3-i-1]; 
+        //display(convert);
+        return convert;
+    }
+
+    boolean winCheck(char convert[])
+    {
+        int flag=0;
+        for (int i=0; i<31; i++)
+        {
+            char ch= convert[i]; 
+            if (ch != '0' && convert[i+1]== ch && convert[i+2]== ch)
+            {
+                flag= 1;
+                break;
+            }
+        }
+        return flag==1? true: false;
+    }
+
+    boolean endCheck(char a, char arr[])
+    {
+        int count=0, k=0; boolean b;
+        char arr2[]= new char[9]; 
+        display (arr);
+        /*for (int i=1; i<32; i++)
+        { 
+            //System.out.println("\n"+arr[i]);
+            if (arr[i]=='0' && i!= 1 && i!= 5 && i!=9 && i!=13 && i!=17 && i!=21 && i!=25 && i!=29)
+                count++;
+            //arr2[k++]= arr[i]; 
+        }  */
+           //System.out.println();
+               // display(arr); 
+               // 1 5 9 13 
+           System.out.println("\n"+count);
+        /*if (count>2)
+        { */   for (int i=0; i<33; i++)
+                if (arr[i]=='0')  
+                arr[i]=a;
+            if (winCheck(arr))
+                return false; 
+            //}
+        return true;
+    }
+
+    int input(char arr[][], String name)
+    {
+        Scanner sc= new Scanner (System.in); 
+        System.out.println("\n"+name+": Enter row and column index with a space: "); 
+        int r= sc.nextInt(); 
+        int c= sc.nextInt(); 
+        if ( r>2 || c>2 || arr[r][c] != '0')
+        {
+            System.out.println("\n"+name+" : Enter character in available space only.");
+            int a= input(arr, name); 
+            return a;
+        }
+        return r*10+c; 
+    }
+
+    public static void main()
+    {   Scanner sc= new Scanner (System.in); 
+        TicTacToe obj= new TicTacToe(); 
+
+        System.out.println("Player 1: enter your name: "); 
+        String nam1= sc.next(); 
+        System.out.println("\nPlayer 2: enter your name: "); 
+        String nam2= sc.next(); 
+
+        System.out.println("\n"+nam1+" : enter your character: "); 
+        char ch1= sc.next().charAt(0);
+        System.out.println("\n"+nam2+" : enter your character: "); 
+        char ch2= sc.next().charAt(0);
+
+        System.out.println("\nLET'S BEGIN THE GAME!"); 
+        char arr[][]= new char[3][3]; 
+
+        for (int i=0; i<3; i++)
+            for (int j=0; j<3; j++)
+                arr[i][j]='0'; 
+
+        for (int i=0; i<5; i++)
+        {
+            int n= obj.input(arr, nam1); 
+            int r= n/10; 
+            int c= n%10; 
+            arr[r][c]= ch1; 
+            for (int k=0; k<3; k++)
+            {
+                for (int m=0; m<3; m++)
+                    System.out.print(arr[k][m]+"\t"); 
+                System.out.println();
+            }
+
+            if (i>=2)
+            {
+                char convert[]= obj.copy(arr);
+                if (obj.winCheck(convert))
+                {   System.out.println("\n"+nam1.toUpperCase()+" WINS!"); 
+                    System.exit(0);
+                }
+                else if (obj.endCheck(ch1, convert))
+                {
+                    System.out.println("\nGAME OVER."); 
+                    System.exit(0);
+                }
+            }
+
+            n= obj.input(arr, nam2); 
+            r= n/10; 
+            c= n%10; 
+            arr[r][c]= ch2; 
+            for (int k=0; k<3; k++)
+            {
+                for (int m=0; m<3; m++)
+                    System.out.print(arr[k][m]+"\t"); 
+                System.out.println();
+            }
+            if (i>=2)
+            {
+                char convert[]= obj.copy(arr);
+                if (obj.winCheck(convert))
+                {
+                    System.out.println("\n"+nam2.toUpperCase()+" WINS!");
+                    System.exit(0);
+                }
+                else if (obj.endCheck(ch2, convert))
+                {
+                    System.out.println("\nGAME OVER."); 
+                    System.exit(0);
+                }
+            }
+        }
+        //System.out.println("\nIt's a Tie! Try Again."); 
+    }
+}
